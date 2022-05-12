@@ -1,5 +1,6 @@
 ﻿using auth.Attributes;
 using auth.DbModels;
+using auth.Middleware;
 using auth.Models;
 using auth.Services;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,12 @@ namespace auth.Controllers
     public class AuthController : ControllerBase
     {
         private IUserService _userService;
+        private readonly UserData _userData;
 
-        public AuthController(IUserService userService)
+        public AuthController(IUserService userService, UserData userData)
         {
             _userService = userService;
+            _userData = userData;
         }
 
         [HttpPost("authenticate")]
@@ -40,11 +43,11 @@ namespace auth.Controllers
 
 
         [Authorize]
-        [HttpGet("User")]
-        public async Task<IActionResult> GetUser(HttpContext httpContext)
+        [HttpGet]
+        [Route("User")]
+        public async Task<IActionResult> GetUser()
         {
-            var user = await _userService.(httpContext.Items);
-            return Ok(user);
+            return new JsonResult(_userData.Id);
         }
     }
 }

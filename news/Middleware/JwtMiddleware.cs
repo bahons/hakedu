@@ -1,15 +1,15 @@
-﻿using auth.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using news.Services;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace auth.Middleware
+namespace news.Middleware
 {
     public class JwtMiddleware
     {
@@ -47,8 +47,6 @@ namespace auth.Middleware
                     // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
                     ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
-
-                
 
 
                 var jwtToken = (JwtSecurityToken)validatedToken;

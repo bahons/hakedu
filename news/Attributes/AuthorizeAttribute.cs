@@ -1,10 +1,9 @@
-﻿using auth.DbModels;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
+using news.DbModels;
 using System;
-using System.Linq;
 
-namespace auth.Attributes
+namespace news.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter

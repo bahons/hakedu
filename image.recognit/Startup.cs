@@ -1,12 +1,8 @@
-using auth.DbModels;
-using auth.Middleware;
-using auth.Services;
+using image.recognit.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace auth
+namespace image.recognit
 {
     public class Startup
     {
@@ -31,24 +27,11 @@ namespace auth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDb>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<AppDb>();
-
-            services.AddCors();
-            services.AddScoped<UserData>();
-
+            services.AddScoped<RecognitService>();
             services.AddControllers();
-
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-
-            services.AddScoped<IUserService, UserService>();
-
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "auth", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "image.recognit", Version = "v1" });
             });
         }
 
@@ -59,19 +42,12 @@ namespace auth
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "auth v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "image.recognit v1"));
             }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
-            app.UseMiddleware<JwtMiddleware>();
 
             app.UseAuthorization();
 
