@@ -28,6 +28,10 @@ namespace image.recognit
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<RecognitService>();
+
+            services.AddMemoryCache();
+            services.AddTransient<CacheService>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

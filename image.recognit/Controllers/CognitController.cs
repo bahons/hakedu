@@ -1,9 +1,13 @@
-﻿using image.recognit.Models;
+﻿using Dapper;
+using image.recognit.Models;
 using image.recognit.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace image.recognit.Controllers
@@ -14,10 +18,12 @@ namespace image.recognit.Controllers
     {
         private RecognitService _recognit;
         private IWebHostEnvironment _appEnvironment;
-        public CognitController(RecognitService recognitService, IWebHostEnvironment appEnvironment)
+        private readonly CacheService _cacheService;
+        public CognitController(RecognitService recognitService, IWebHostEnvironment appEnvironment, CacheService cacheService)
         {
             _recognit = recognitService;
             _appEnvironment = appEnvironment;
+            _cacheService = cacheService;
         }
 
         [HttpPost]
@@ -34,7 +40,33 @@ namespace image.recognit.Controllers
                 }
 
                 var result = _recognit.Recognit(_appEnvironment.WebRootPath + path);
-                return new JsonResult(result);
+
+                var arr = result.Split(" ");
+
+                IEnumerable<Search> data = _cacheService.GetSearch();
+                if(data == null)
+                {
+                    var conn = new SqlConnection("Data Source=SQL5059.site4now.net;Initial Catalog=db_a43a43_geoid;User Id=db_a43a43_geoid_admin;Password=1q2w3e4r5");
+                    conn.Open();
+                    string sqlP = "select * from Searches";
+                    data = conn.Query<Search>(sqlP);
+                    _cacheService.AddClick(data);
+                }
+
+                var len = arr.Length;
+                string texts = "";
+
+                for (int i = 0; i < len/2; i++)
+                {
+                    data = data.Where(p => p.Name.Contains(arr[i])).ToList();
+                    texts = texts + arr[i] + " ";
+                }
+
+                SearchResult sr = new SearchResult();
+                sr.searchtext = texts;
+                sr.Searches = data;
+
+                return new JsonResult(sr);
             }
             return new JsonResult("no content");
         }
