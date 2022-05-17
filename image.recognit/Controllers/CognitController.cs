@@ -27,6 +27,18 @@ namespace image.recognit.Controllers
             _cacheService = cacheService;
         }
 
+
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            string str = "Hello GET Request!";
+            return new JsonResult(str);
+        }
+
+
+
+
         [HttpPost]
         public async Task<JsonResult> Post(IFormFile image)
         {

@@ -8,11 +8,9 @@ namespace image.recognit.Services
         {
             string result = "";
 
-            string licstr = @"IRONOCR.BAKYTZHANSHYMKENTBAY.
-13869-77634456CB-AGVMGWHOYIHJA-4GP56POJLFRV-SML2PQQZODZ2-7CTOVCPL67YI-TODSSKJQQJN6-UBRDR7-TETBEF6AN5KFUA-DEPLOYMENT.
-TRIAL-3DSXK2.TRIAL.EXPIRES.12.JUN.2022";
+            string licstr = @"IRONOCR.BAKYTZHANSHYMKENTBAY.13869-B4F6E579D8-D6EMFPOOLQEGGRC-SJJ5NWSICR3W-CY6NZRWD4MYP-27HIDZMO4HQI-7UIH7P5GCTGX-OOVL3B-THGIDJCBJBGGEA-DEPLOYMENT.TRIAL-4TOJ2P.TRIAL.EXPIRES.16.JUN.2022";
 
-            bool lic = IronOcr.License.IsValidLicense(licstr);
+            IronOcr.Installation.LicenseKey = licstr;
 
             var Ocr = new IronTesseract();
             Ocr.Language = OcrLanguage.Kazakh;
