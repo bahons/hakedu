@@ -1,54 +1,59 @@
-﻿using Dapper;
-using System;
-using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Telegram.Bot;
+using Telegram.Bot.Exceptions;
+using Telegram.Bot.Extensions.Polling;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace ConsoleApp1
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static ITelegramBotClient bot = new TelegramBotClient("5357660459:AAHwpsxG2avVXepaswuK64EGDxzLg-LePc");
+        static async Task Main(string[] args)
         {
-            string str = "Ұлы географиялық ашылулар заманы";
+            
+            Console.WriteLine("Запущен бот " + bot.GetMeAsync().Result.FirstName);
 
-            StreamWriter swd = new StreamWriter("D:\\Test.txt");
-
-            str = str.Replace("\r\n", " ");
-            str = str.Replace(".","");
-            str = str.Replace(",", "");
-            str = str.Replace("  ", " ");
-
-            var arr = str.Split(" ");
-
-            var conn = new SqlConnection("Data Source=SQL5059.site4now.net;Initial Catalog=db_a43a43_geoid;User Id=db_a43a43_geoid_admin;Password=1q2w3e4r5");
-            conn.Open();
-            string sqlP = "select * from Searches";
-
-            var data = conn.Query<Search>(sqlP);
-
-            var len = arr.Length;
-
-            for ( int i = 0; i < len-1; i++ )
+            var cts = new CancellationTokenSource();
+            var cancellationToken = cts.Token;
+            var receiverOptions = new ReceiverOptions
             {
-                if(i < len/4)
+                AllowedUpdates = { }, // receive all update types
+            };
+            bot.StartReceiving(
+                HandleUpdateAsync,
+                HandleErrorAsync,
+                receiverOptions,
+                cancellationToken
+            );
+            Console.ReadLine();
+        }
+
+        public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        {
+            // Некоторые действия
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
+            if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
+            {
+                var message = update.Message;
+                if (message.Text.ToLower() == "/start")
                 {
-                    data = data.Where(p=>p.Name.Contains(arr[i]));
+                    await botClient.SendTextMessageAsync(message.Chat, "Добро пожаловать на борт, добрый путник!");
+                    return;
                 }
+                await botClient.SendTextMessageAsync(message.Chat, "Привет-привет!!");
             }
+        }
 
-            foreach (var v in data)
-                swd.WriteLine(v.Name + "( " + v.Otvet + " )");
-
-            swd.Close();
-            Console.WriteLine(data.Count());
+        public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        {
+            // Некоторые действия
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exception));
         }
     }
 
 
-    public class Search
-    {
-        public string Name { get; set; }
-        public string Otvet { get; set; }
-    }
 }

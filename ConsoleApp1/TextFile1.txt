@@ -1,0 +1,4 @@
+﻿https://github.com/TelegramBots/Telegram.Bot.Examples - asp.net 6
+
+
+https://gosha20777.github.io/code/2018/04/02/dotnetcore-bot/ - asp.net 2.0
