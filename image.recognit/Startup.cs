@@ -1,4 +1,6 @@
+using image.recognit.Middleware;
 using image.recognit.Services;
+using image.recognit.TelegramService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,15 +36,17 @@ namespace image.recognit
             services.AddMemoryCache();
             services.AddTransient<CacheService>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "image.recognit", Version = "v1" });
             });
+
+            services.TelegramDIService();
         }
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             //if (env.IsDevelopment())
             
@@ -52,7 +56,7 @@ namespace image.recognit
             
 
             app.UseHttpsRedirection();
-
+            serviceProvider.GetRequiredService<TelegramBot>().GetBot().Wait();
             app.UseRouting();
 
             app.UseAuthorization();
