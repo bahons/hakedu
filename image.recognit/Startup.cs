@@ -55,7 +55,6 @@ namespace image.recognit
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "image.recognit v1"));
             
 
-            app.UseHttpsRedirection();
             serviceProvider.GetRequiredService<TelegramBot>().GetBot().Wait();
             app.UseRouting();
 
