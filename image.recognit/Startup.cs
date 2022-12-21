@@ -56,7 +56,7 @@ namespace image.recognit
             
 
             app.UseHttpsRedirection();
-            serviceProvider.GetRequiredService<TelegramBot>().GetBot().Wait();
+            //serviceProvider.GetRequiredService<TelegramBot>().GetBot().Wait();
             app.UseRouting();
 
             app.UseAuthorization();

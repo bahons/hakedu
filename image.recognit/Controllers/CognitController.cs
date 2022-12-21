@@ -107,9 +107,9 @@ namespace image.recognit.Controllers
 
                     return new JsonResult(sr);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    throw;
+                    return new JsonResult(ex);
                 }
             }
             return new JsonResult("no content");
