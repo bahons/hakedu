@@ -11,7 +11,7 @@ namespace ConsoleApp1
 {
     internal class Program
     {
-        static ITelegramBotClient bot = new TelegramBotClient("5357660459:AAHwpsxG2avVXepaswuK64EGDxczLg-LePc");
+        static ITelegramBotClient bot = new TelegramBotClient("------------------------------------");
         static async Task Main(string[] args)
         {
             
