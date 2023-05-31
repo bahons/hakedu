@@ -19,7 +19,7 @@ namespace image.recognit.Services
             {
                 cache.Set("search", data, new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(6)
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
                 });
                 return true;
             }

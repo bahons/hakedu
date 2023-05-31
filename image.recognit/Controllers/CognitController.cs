@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace image.recognit.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/cognit")]
     [ApiController]
     public class CognitController : ControllerBase
     {
@@ -32,10 +32,12 @@ namespace image.recognit.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            string str = "Hello GET Request!";
-            return new JsonResult(str);
+            var data = new
+            {
+                message = "Hello GET Request!"
+            };
+            return new JsonResult(data);
         }
-
 
 
 
@@ -79,17 +81,18 @@ namespace image.recognit.Controllers
                     {
                         try
                         {
-                            var conn = new SqlConnection("Data Source=SQL5059.site4now.net;Initial Catalog=db_a43a43_geoid;User Id=db_a43a43_geoid_admin;Password=1q2w3e4r5");
-                            conn.Open();
-                            string sqlP = "select * from Searches";
-                            data = conn.Query<Search>(sqlP);
-                            _cacheService.AddClick(data);
+                            using (var conn = new SqlConnection("Data Source=185.234.114.117;Initial Catalog=db_a8b736_geo2023;User Id=geoadmin;Password=12357Geoid@;MultipleActiveResultSets=true;Encrypt=False;"))
+                            {
+                                await conn.OpenAsync();
+                                string sqlP = "select * from Searches";
+                                data = await conn.QueryAsync<Search>(sqlP);
+                                _cacheService.AddClick(data);
+                            }
                         }
                         catch (Exception ex)
                         {
                             throw new Exception("sql exceptions , " + ex.Message);
                         }
-                        
                     }
 
                     var len = arr.Length;
@@ -107,12 +110,12 @@ namespace image.recognit.Controllers
 
                     return new JsonResult(sr);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    throw;
+                   return new JsonResult(BadRequest(ex));
                 }
             }
-            return new JsonResult("no content");
+            return new JsonResult(NoContent());
         }
     }
 }

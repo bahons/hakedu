@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace news.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/wear")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

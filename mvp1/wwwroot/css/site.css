@@ -1,0 +1,12 @@
+﻿
+
+.edit-select-market h3
+{
+    float: left;
+}
+
+.edit-select-market span {
+    float: right;
+    padding: 3px 3px 0 3px;
+    font-size: 16px;
+}
